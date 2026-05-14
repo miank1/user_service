@@ -1,7 +1,6 @@
 package jwtutil
 
 import (
-	"log"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -10,7 +9,6 @@ import (
 // GenerateToken creates a signed JWT with a user ID and expiry
 func GenerateToken(secret, userID string, ttlMinutes int) (string, error) {
 
-	log.Println("Hello World ---------------->")
 	claims := jwt.MapClaims{
 		"user_id": userID,
 		"exp":     time.Now().Add(time.Minute * time.Duration(ttlMinutes)).Unix(),
@@ -18,7 +16,6 @@ func GenerateToken(secret, userID string, ttlMinutes int) (string, error) {
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	log.Println("token is ----------------------->", token)
 	return token.SignedString([]byte(secret))
 }
 

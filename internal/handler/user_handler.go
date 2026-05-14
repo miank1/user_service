@@ -51,21 +51,21 @@ func (h *UserHandler) Login(c *gin.Context) {
 		return
 	}
 
-	// ✅ Step 1: Validate user credentials
+	// Step 1: Validate user credentials
 	user, err := h.Svc.Authenticate(req.Email, req.Password)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid email or password"})
 		return
 	}
 
-	// ✅ Step 2: Generate JWT Token
+	// Step 2: Generate JWT Token
 	token, err := h.Svc.GenerateToken(user.ID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to generate token"})
 		return
 	}
 
-	// ✅ Step 3: Respond with token and user info
+	// Step 3: Respond with token and user info
 	c.JSON(http.StatusOK, gin.H{
 		"status": "success",
 		"token":  token,

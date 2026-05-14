@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"os"
 	"time"
@@ -39,6 +40,8 @@ func (s *UserService) Login(email, password string) (string, *model.User, error)
 	}
 
 	// generate token
+
+	fmt.Println("BEFORE TOKEN GENERATION ")
 	token, err := jwtutil.GenerateToken(s.JWTSecret, user.ID, s.JWTTTL)
 	if err != nil {
 		return "", nil, err
@@ -101,16 +104,18 @@ func (s *UserService) GenerateToken(userID string) (string, error) {
 }
 
 func (s *UserService) Authenticate(email, password string) (*model.User, error) {
+
 	user, err := s.Repo.FindByEmail(email)
 	if err != nil {
 		return nil, err
 	}
 
-	if user == nil {
-		return nil, errors.New("user not found")
-	}
+	err = bcrypt.CompareHashAndPassword(
+		[]byte(user.PasswordHash),
+		[]byte(password),
+	)
 
-	if err := bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(password)); err != nil {
+	if err != nil {
 		return nil, errors.New("invalid credentials")
 	}
 

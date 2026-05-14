@@ -9,7 +9,7 @@ var log *zap.Logger
 // Init initializes the global logger
 func Init() {
 	var err error
-	log, err = zap.NewProduction() // or zap.NewDevelopment() for local dev
+	log, err = zap.NewProduction()
 	if err != nil {
 		panic("failed to init logger: " + err.Error())
 	}

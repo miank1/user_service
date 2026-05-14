@@ -22,7 +22,7 @@ func main() {
 	defer logger.Sync()
 
 	// Load environment variables from .env file
-	if err := godotenv.Load("../.env"); err != nil {
+	if err := godotenv.Load(".env"); err != nil {
 		log.Println("⚠️  No .env file found, using system environment variables")
 	}
 
@@ -70,7 +70,7 @@ func main() {
 	})
 
 	// User API routes
-	api := r.Group("/api/v1")
+	api := r.Group("/users")
 	api.POST("/register", h.Register)
 	api.POST("/login", h.Login)
 	api.GET("/me", h.Me)
