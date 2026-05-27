@@ -81,9 +81,14 @@ func main() {
 
 	protected.GET("/me", h.Me)
 
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8081"
+	}
+
 	// Start server
-	fmt.Println("✅ ***** USER SERVICE ***** running on port 8081")
-	if err := r.Run(":" + "8081"); err != nil {
+	fmt.Printf("✅ ***** USER SERVICE ***** running on port %s\n", port)
+	if err := r.Run(":" + port); err != nil {
 		log.Fatalf("❌ Failed to start server: %v", err)
 	}
 }

@@ -109,6 +109,9 @@ func (s *UserService) Authenticate(email, password string) (*model.User, error) 
 	if err != nil {
 		return nil, err
 	}
+	if user == nil {
+		return nil, errors.New("invalid credentials")
+	}
 
 	err = bcrypt.CompareHashAndPassword(
 		[]byte(user.PasswordHash),

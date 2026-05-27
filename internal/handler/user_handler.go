@@ -13,8 +13,29 @@ type UserHandler struct {
 	Svc *service.UserService
 }
 
+type apiResponse struct {
+	Status  string      `json:"status"`
+	Message string      `json:"message,omitempty"`
+	Data    interface{} `json:"data,omitempty"`
+}
+
 func NewUserHandler(s *service.UserService) *UserHandler {
 	return &UserHandler{Svc: s}
+}
+
+func writeError(c *gin.Context, statusCode int, message string) {
+	c.JSON(statusCode, apiResponse{
+		Status:  "error",
+		Message: message,
+	})
+}
+
+func writeSuccess(c *gin.Context, statusCode int, message string, data interface{}) {
+	c.JSON(statusCode, apiResponse{
+		Status:  "success",
+		Message: message,
+		Data:    data,
+	})
 }
 
 /* Register */
@@ -27,17 +48,17 @@ type registerReq struct {
 func (h *UserHandler) Register(c *gin.Context) {
 	var req registerReq
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": "error", "message": err.Error()})
+		writeError(c, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	u, err := h.Svc.Register(req.Name, req.Email, req.Password)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": "error", "message": err.Error()})
+		writeError(c, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"status": "success", "user": u})
+	writeSuccess(c, http.StatusCreated, "user registered successfully", gin.H{"user": u})
 }
 
 /* Login */
@@ -49,29 +70,28 @@ type loginReq struct {
 func (h *UserHandler) Login(c *gin.Context) {
 	var req loginReq
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		writeError(c, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	// Step 1: Validate user credentials
 	user, err := h.Svc.Authenticate(req.Email, req.Password)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid email or password"})
+		writeError(c, http.StatusUnauthorized, "invalid email or password")
 		return
 	}
 
 	// Step 2: Generate JWT Token
 	token, err := jwtpkg.GenerateToken(user.ID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to generate token"})
+		writeError(c, http.StatusInternalServerError, "failed to generate token")
 		return
 	}
 
 	// Step 3: Respond with token and user info
-	c.JSON(http.StatusOK, gin.H{
-		"status": "success",
-		"token":  token,
-		"user":   user,
+	writeSuccess(c, http.StatusOK, "login successful", gin.H{
+		"token": token,
+		"user":  user,
 	})
 }
 
@@ -79,17 +99,17 @@ func (h *UserHandler) Login(c *gin.Context) {
 func (h *UserHandler) Me(c *gin.Context) {
 	userID := c.GetString("user_id")
 	if userID == "" {
-		c.JSON(http.StatusUnauthorized, gin.H{"status": "error", "message": "unauthorized"})
+		writeError(c, http.StatusUnauthorized, "unauthorized")
 		return
 	}
 	user, err := h.Svc.GetByID(userID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"status": "error", "message": "failed to fetch user"})
+		writeError(c, http.StatusInternalServerError, "failed to fetch user")
 		return
 	}
 	if user == nil {
-		c.JSON(http.StatusNotFound, gin.H{"status": "error", "message": "user not found"})
+		writeError(c, http.StatusNotFound, "user not found")
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"status": "success", "user": user})
+	writeSuccess(c, http.StatusOK, "user fetched successfully", gin.H{"user": user})
 }
