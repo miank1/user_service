@@ -4,6 +4,8 @@ import (
 	"ecommerce-backend/services/user-service/internal/service"
 	"net/http"
 
+	jwtpkg "ecommerce-backend/pkg/jwt"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -59,7 +61,7 @@ func (h *UserHandler) Login(c *gin.Context) {
 	}
 
 	// Step 2: Generate JWT Token
-	token, err := h.Svc.GenerateToken(user.ID)
+	token, err := jwtpkg.GenerateToken(user.ID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to generate token"})
 		return
