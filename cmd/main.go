@@ -1,22 +1,22 @@
 package main
 
 import (
+	"ecommerce-backend/pkg/db"
+	"ecommerce-backend/pkg/logger"
+	"ecommerce-backend/pkg/middleware"
+	"ecommerce-backend/services/user-service/internal/handler"
+	"ecommerce-backend/services/user-service/internal/model"
+	"ecommerce-backend/services/user-service/internal/repository"
+	"ecommerce-backend/services/user-service/internal/service"
 	"fmt"
 	"log"
 	"os"
-	"user-service/internal/handler"
-	"user-service/internal/model"
-	"user-service/internal/repository"
-	"user-service/internal/service"
-	"user-service/pkg/db"
-	"user-service/pkg/logger"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
 
 func main() {
-	// Initialize global logger
 
 	logger.Init()
 	defer logger.Sync()
@@ -69,14 +69,20 @@ func main() {
 		c.JSON(200, gin.H{"db": "connected ✅"})
 	})
 
-	// User API routes
 	api := r.Group("/users")
+
+	// Public routes
 	api.POST("/register", h.Register)
 	api.POST("/login", h.Login)
-	api.GET("/me", h.Me)
+
+	// Protected routes
+	protected := api.Group("")
+	protected.Use(middleware.JWTAuth())
+
+	protected.GET("/me", h.Me)
 
 	// Start server
-	fmt.Println("✅ UserService running on port 8081")
+	fmt.Println("✅ ***** USER SERVICE ***** running on port 8081")
 	if err := r.Run(":" + "8081"); err != nil {
 		log.Fatalf("❌ Failed to start server: %v", err)
 	}

@@ -6,13 +6,13 @@ import (
 	"log"
 	"os"
 	"time"
-	"user-service/internal/model"
-	"user-service/internal/repository"
 
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 
-	jwtutil "user-service/pkg/jwt"
+	jwtutil "ecommerce-backend/pkg/jwt"
+	"ecommerce-backend/services/user-service/internal/model"
+	"ecommerce-backend/services/user-service/internal/repository"
 )
 
 type UserService struct {
