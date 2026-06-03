@@ -4,10 +4,11 @@ import (
 	"ecommerce-backend/pkg/db"
 	"ecommerce-backend/pkg/logger"
 	"ecommerce-backend/pkg/middleware"
-	"ecommerce-backend/services/user-service/internal/handler"
-	"ecommerce-backend/services/user-service/internal/model"
-	"ecommerce-backend/services/user-service/internal/repository"
-	"ecommerce-backend/services/user-service/internal/service"
+	"ecommerce-backend/services/user_service/internal/handler"
+	"ecommerce-backend/services/user_service/internal/model"
+	"ecommerce-backend/services/user_service/internal/repository"
+	"ecommerce-backend/services/user_service/internal/service"
+
 	"fmt"
 	"log"
 	"os"
@@ -23,9 +24,8 @@ func main() {
 
 	// Load environment variables from .env file
 	if err := godotenv.Load(".env"); err != nil {
-		log.Println("⚠️  No .env file found, using system environment variables")
+		log.Println("⚠️ No .env file found")
 	}
-
 	log.Println("Loaded DSN:", os.Getenv("DATABASE_DSN"))
 
 	dsn := os.Getenv("DATABASE_DSN")

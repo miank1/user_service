@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"ecommerce-backend/services/user-service/internal/model"
+	"ecommerce-backend/services/user_service/internal/model"
 	"errors"
 
 	"gorm.io/gorm"

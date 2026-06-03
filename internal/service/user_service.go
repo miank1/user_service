@@ -3,25 +3,27 @@ package service
 import (
 	"errors"
 	"fmt"
-	"log"
-	"os"
 	"time"
 
-	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 
 	jwtutil "ecommerce-backend/pkg/jwt"
-	"ecommerce-backend/services/user-service/internal/model"
-	"ecommerce-backend/services/user-service/internal/repository"
+	"ecommerce-backend/services/user_service/internal/model"
 )
 
+type UserRepository interface {
+	Create(*model.User) error
+	FindByEmail(string) (*model.User, error)
+	GetByID(string) (*model.User, error)
+}
+
 type UserService struct {
-	Repo      *repository.UserRepository
+	Repo      UserRepository
 	JWTTTL    int // minutes
 	JWTSecret string
 }
 
-func NewUserService(r *repository.UserRepository) *UserService {
+func NewUserService(r UserRepository) *UserService {
 	return &UserService{Repo: r}
 }
 
@@ -89,18 +91,6 @@ func (s *UserService) Register(name, email, password string) (*model.User, error
 
 func (s *UserService) GetByID(id string) (*model.User, error) {
 	return s.Repo.GetByID(id)
-}
-
-func (s *UserService) GenerateToken(userID string) (string, error) {
-	claims := jwt.MapClaims{
-		"user_id": userID,
-		"exp":     time.Now().Add(time.Hour * 24).Unix(),
-	}
-
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	log.Println("🔐 UserService secret:", os.Getenv("JWT_SECRET"))
-
-	return token.SignedString([]byte(os.Getenv("JWT_SECRET")))
 }
 
 func (s *UserService) Authenticate(email, password string) (*model.User, error) {
