@@ -1,8 +1,8 @@
 package service
 
 import (
-	"ecommerce-backend/services/user_service/internal/model"
 	"testing"
+	"user-service/internal/model"
 
 	"golang.org/x/crypto/bcrypt"
 )

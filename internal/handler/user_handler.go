@@ -2,9 +2,9 @@ package handler
 
 import (
 	"net/http"
+	"user-service/internal/service"
 
-	jwtpkg "ecommerce-backend/pkg/jwt"
-	"ecommerce-backend/services/user_service/internal/service"
+	jwtpkg "user-service/pkg/jwt"
 
 	"github.com/gin-gonic/gin"
 )

@@ -4,11 +4,11 @@ import (
 	"errors"
 	"fmt"
 	"time"
+	"user-service/internal/model"
 
 	"golang.org/x/crypto/bcrypt"
 
-	jwtutil "ecommerce-backend/pkg/jwt"
-	"ecommerce-backend/services/user_service/internal/model"
+	jwtutil "user-service/pkg/jwt"
 )
 
 type UserRepository interface {

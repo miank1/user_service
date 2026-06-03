@@ -1,17 +1,16 @@
 package main
 
 import (
-	"ecommerce-backend/pkg/db"
-	"ecommerce-backend/pkg/logger"
-	"ecommerce-backend/pkg/middleware"
-	"ecommerce-backend/services/user_service/internal/handler"
-	"ecommerce-backend/services/user_service/internal/model"
-	"ecommerce-backend/services/user_service/internal/repository"
-	"ecommerce-backend/services/user_service/internal/service"
-
 	"fmt"
 	"log"
 	"os"
+	"user-service/internal/handler"
+	"user-service/internal/model"
+	"user-service/internal/repository"
+	"user-service/internal/service"
+	"user-service/pkg/db"
+	"user-service/pkg/logger"
+	"user-service/pkg/middleware"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
