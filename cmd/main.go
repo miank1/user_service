@@ -12,9 +12,23 @@ import (
 	"user-service/pkg/logger"
 	"user-service/pkg/middleware"
 
+	_ "github.com/miank1/user_service/docs"
+
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
+
+// @title User Service API
+// @version 1.0
+// @description User Management Service
+// @host localhost:8081
+// @BasePath /
+//
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
 
 func main() {
 
@@ -49,6 +63,10 @@ func main() {
 	// Initialize Gin router
 	r := gin.Default()
 
+	r.GET("/swagger/*any",
+		ginSwagger.WrapHandler(swaggerFiles.Handler),
+	)
+
 	// Health check endpoint
 	r.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{"status": "userservice is up"})
@@ -71,7 +89,30 @@ func main() {
 	api := r.Group("/users")
 
 	// Public routes
+	// Register godoc
+	//
+	//	@Summary		Register user
+	//	@Description	Register a new user
+	//	@Tags			Users
+	//	@Accept			json
+	//	@Produce		json
+	//	@Param			request	body		dto.RegisterRequest	true	"Register Request"
+	//	@Success		201		{object}	dto.UserResponse
+	//	@Failure		400		{object}	map[string]string
+	//	@Router			/users/register [post]
 	api.POST("/register", h.Register)
+
+	// Login godoc
+	//
+	//	@Summary		Login user
+	//	@Description	Authenticate user and return JWT
+	//	@Tags			Users
+	//	@Accept			json
+	//	@Produce		json
+	//	@Param			request	body		dto.LoginRequest	true	"Login Request"
+	//	@Success		200		{object}	dto.LoginResponse
+	//	@Failure		401		{object}	map[string]string
+	//	@Router			/users/login [post]
 	api.POST("/login", h.Login)
 
 	// Protected routes
@@ -80,6 +121,15 @@ func main() {
 
 	protected.GET("/me", h.Me)
 
+	// Me godoc
+	//
+	//	@Summary		Get current user
+	//	@Description	Get logged in user profile
+	//	@Tags			Users
+	//	@Produce		json
+	//	@Security		BearerAuth
+	//	@Success		200	{object}	dto.UserResponse
+	//	@Router			/users/me [get]
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8081"
