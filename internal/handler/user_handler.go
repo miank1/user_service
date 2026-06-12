@@ -4,9 +4,8 @@ import (
 	"net/http"
 	"user-service/internal/service"
 
-	jwtpkg "user-service/pkg/jwt"
-
 	"github.com/gin-gonic/gin"
+	jwtutil "github.com/miank1/ecommerce_backend/pkg/jwt"
 )
 
 type UserHandler struct {
@@ -82,7 +81,7 @@ func (h *UserHandler) Login(c *gin.Context) {
 	}
 
 	// Step 2: Generate JWT Token
-	token, err := jwtpkg.GenerateToken(user.ID)
+	token, err := jwtutil.GenerateToken(user.ID)
 	if err != nil {
 		writeError(c, http.StatusInternalServerError, "failed to generate token")
 		return

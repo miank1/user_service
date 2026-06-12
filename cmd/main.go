@@ -1,21 +1,18 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"user-service/internal/handler"
 	"user-service/internal/model"
 	"user-service/internal/repository"
 	"user-service/internal/service"
-	"user-service/pkg/db"
-	"user-service/pkg/logger"
-	"user-service/pkg/middleware"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
+	"github.com/miank1/ecommerce_backend/pkg/db"
+	logger "github.com/miank1/ecommerce_backend/pkg/logger"
+	"github.com/miank1/ecommerce_backend/pkg/middleware"
 )
 
 func main() {
@@ -51,10 +48,6 @@ func main() {
 	// Initialize Gin router
 	r := gin.Default()
 
-	r.GET("/swagger/*any",
-		ginSwagger.WrapHandler(swaggerFiles.Handler),
-	)
-
 	// Health check endpoint
 	r.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{"status": "userservice is up"})
@@ -77,22 +70,24 @@ func main() {
 	api := r.Group("/users")
 
 	api.POST("/register", h.Register)
-
 	api.POST("/login", h.Login)
 
 	// Protected routes
 	protected := api.Group("")
 	protected.Use(middleware.JWTAuth())
-	protected.GET("/me", h.Me)
+	{
+		protected.GET("/me", h.Me)
+	}
 
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8081"
 	}
 
-	// Start server
-	fmt.Printf("✅ ***** USER SERVICE ***** running on port %s\n", port)
+	log.Printf("✅ USER SERVICE running on port %s", port)
+
 	if err := r.Run(":" + port); err != nil {
 		log.Fatalf("❌ Failed to start server: %v", err)
 	}
+
 }

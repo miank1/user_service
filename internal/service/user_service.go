@@ -6,9 +6,8 @@ import (
 	"time"
 	"user-service/internal/model"
 
+	jwtutil "github.com/miank1/ecommerce_backend/pkg/jwt"
 	"golang.org/x/crypto/bcrypt"
-
-	jwtutil "user-service/pkg/jwt"
 )
 
 type UserRepository interface {
