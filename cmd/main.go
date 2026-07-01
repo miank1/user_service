@@ -37,6 +37,8 @@ func main() {
 		log.Fatalf("❌ Failed to initialize database: %v", err)
 	}
 
+	log.Println("Hello")
+
 	// Auto migrate User model
 	if err := gormDB.AutoMigrate(&model.User{}); err != nil {
 		log.Fatalf("❌ Auto migrate failed: %v", err)
