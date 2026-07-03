@@ -88,7 +88,7 @@ func main() {
 		port = "8081"
 	}
 
-	log.Printf("✅ USER SERVICE running on port %s", port)
+	log.Printf("USER SERVICE running on port %s", port)
 
 	if err := r.Run(":" + port); err != nil {
 		log.Fatalf("❌ Failed to start server: %v", err)
