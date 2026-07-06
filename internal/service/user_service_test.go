@@ -4,6 +4,7 @@ import (
 	"testing"
 	"user-service/internal/model"
 
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -33,7 +34,7 @@ func TestAuthenticate_Success(t *testing.T) {
 
 	mockRepo := &MockUserRepo{
 		User: &model.User{
-			ID:           "123",
+			ID:           uuid.New(),
 			Email:        "admin@gmail.com",
 			PasswordHash: string(hash),
 		},
@@ -64,7 +65,7 @@ func TestAuthenticate_InvalidPassword(t *testing.T) {
 
 	mockRepo := &MockUserRepo{
 		User: &model.User{
-			ID:           "123",
+			ID:           uuid.New(),
 			Email:        "admin@gmail.com",
 			PasswordHash: string(hash),
 		},

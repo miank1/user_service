@@ -43,7 +43,7 @@ func (s *UserService) Login(email, password string) (string, *model.User, error)
 	// generate token
 
 	fmt.Println("BEFORE TOKEN GENERATION ")
-	token, err := jwtutil.GenerateToken(user.ID)
+	token, err := jwtutil.GenerateToken(user.ID.String())
 	if err != nil {
 		return "", nil, err
 	}

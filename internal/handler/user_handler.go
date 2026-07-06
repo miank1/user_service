@@ -81,7 +81,7 @@ func (h *UserHandler) Login(c *gin.Context) {
 	}
 
 	// Step 2: Generate JWT Token
-	token, err := jwtutil.GenerateToken(user.ID)
+	token, err := jwtutil.GenerateToken(user.ID.String())
 	if err != nil {
 		writeError(c, http.StatusInternalServerError, "failed to generate token")
 		return
