@@ -1,12 +1,14 @@
-package model
+import (
+	"time"
 
-import "time"
+	"github.com/google/uuid"
+)
 
 type User struct {
-	ID           string    `gorm:"type:uuid;default:gen_random_uuid();primaryKey"`
-	Name         string    `json:"name"`
+	ID           uuid.UUID `gorm:"type:uuid;default:gen_random_uuid();primaryKey" json:"id"`
+	Name         string    `gorm:"not null" json:"name"`
 	Email        string    `gorm:"uniqueIndex;not null" json:"email"`
-	PasswordHash string    `json:"-"` // never return in JSON
+	PasswordHash string    `gorm:"not null" json:"-"`
 	CreatedAt    time.Time `json:"created_at"`
 	UpdatedAt    time.Time `json:"updated_at"`
 }
