@@ -28,8 +28,6 @@ func main() {
 	// Load environment variables from .env file
 	LoadEnv()
 
-	log.Println("Loaded DSN:", os.Getenv("DATABASE_DSN"))
-
 	dsn := os.Getenv("DATABASE_DSN")
 
 	gormDB, err := db.InitDB(dsn)
